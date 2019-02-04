@@ -5,12 +5,16 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour{
 
+    public AudioClip soundEffect;
+    public AudioSource soundSource;
     public float speed;
     public Text countText;
     public Text winText;
 
     private Rigidbody rb;
     private int count;
+    private GameObject[] coins;
+    private int coinCount;
 
     private void Start()
     {
@@ -18,6 +22,9 @@ public class PlayerController : MonoBehaviour{
         count = 0;
         SetCountText();
         winText.text = "";
+        soundSource.clip = soundEffect;
+        coins = GameObject.FindGameObjectsWithTag("Pick Up");
+        coinCount = coins.Length;
     }
 
     private void FixedUpdate()
@@ -37,14 +44,16 @@ public class PlayerController : MonoBehaviour{
             other.gameObject.SetActive(false);
             count++;
             SetCountText();
+            soundSource.Play();
         }
     }
 
     void SetCountText()
     {
         countText.text = "Count: " + count.ToString();
-        if(count >= 10)
+        if(count >= coinCount)
         {
+            winText.color = Color.green;
             winText.text = "You win!";
         }
     }
